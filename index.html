@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://kit.fontawesome.com/0c20ed8153.js" crossorigin="anonymous"></script>
+    <title>MUSIC PLAYER</title>
+</head>
+<body>
+    <div class="container">
+        <div class="music-player">
+            <nav>
+                <div class="circle">
+                    <i class="fa-solid fa-angle-left"></i>
+                </div>
+                <div class="circle">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </nav>
+            <img id="songImg" src="Admirin-you.jpg" class="song-img">
+            <h1 id="songTitle">Admirin You</h1>
+            <p id="songArtist">(feat. Preston Pablo) - Karan Aujla</p>
+            <audio id="song">
+                <source src="Admirin_You_(feat__Preston_Pablo)_-_Karan_Aujla_320_Kbps.mp3" type="audio/mp3">
+            </audio>
+            <input type="range" value="0" id="progress">
+
+            <div class="controls">
+                <div id="prevBtn" onclick="previousTrack()">
+                    <i class="fa-solid fa-backward"></i>
+                </div>
+                <div onclick="playPause()">
+                    <i class="fa-solid fa-play" id="ctrlIcon"></i>
+                </div>
+                <div id="nextBtn" onclick="nextTrack()">
+                    <i class="fa-solid fa-forward"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let progress = document.getElementById("progress");
+        let song = document.getElementById("song");
+        let ctrlIcon = document.getElementById("ctrlIcon");
+        let songTitle = document.getElementById("songTitle");
+        let songArtist = document.getElementById("songArtist");
+        let songImg = document.getElementById("songImg");
+
+        const tracks = [
+            {
+                title: "Admirin You",
+                artist: "(feat. Preston Pablo) - Karan Aujla",
+                src: "Admirin_You_(feat__Preston_Pablo)_-_Karan_Aujla_320_Kbps.mp3",
+                img: "Admirin-you.jpg"
+            },
+            {
+                title: "On Top",
+                artist: "Karan Aujla",
+                src: "On_Top_-_Karan_Aujla_320_Kbps.mp3",
+                img: "On_Top_-_Karan_Aujla_128_Kbps.jpeg"
+            },
+            {
+                title: "Players",
+                artist: "Badshah, Karan Aujla",
+                src: "Players_-_Badshah_320_Kbps.mp3",
+                img: "Players_-_Badshah_128_Kbps.jpeg"
+            },
+            {
+                title: "Hass Hass",
+                artist: "Diljit Dosanjh, Sia, Greg Kurstin",
+                src: "pagalworld.com.mx-Hass Hass.mp3",
+                img: "Hass hass.jpg"
+            },
+            {
+                title: "Hua Hai Aj",
+                artist: "Arman Malik",
+                src: "Hua-Hai-Aaj_320(PagalWorld).mp3",
+                img: "huwa hai aj.jpg"
+            },
+            {
+                title: "Main Deewana Tera",
+                artist: "Sachin-Jigar, Guru Randhawa",
+                src: "Main-Deewana-Tera(PagalWorld).mp3",
+                img: "Main dewana.jpg"
+            },
+            {
+                title: "Jhoome Jo Pathaan",
+                artist: "Arijit Singh, Sukriti Kakar, Vishal and Sheykhar",
+                src: "Jhoome-Jo-Pathaan(PagalWorld).mp3",
+                img: "pathan.jpg"
+            },
+            {
+                title: "Tu Ha To Phir Aur Kya Chahiye ",
+                artist: "Arijit Singh, Sachin- Jigar",
+                src: "Tu-Ha-To-Phir-Aur-Kya-Chahiye(PagalWorld).mp3",
+                img: "toh or kya chiya.jpg"
+            },
+            {
+                title: "Mujhe Pyaar Pyaar Hai",
+                artist: "Armaan Malik, Shreya Ghoshal",
+                src: "Bhoot-Police---Mujhe-Pyaar-Pyaar-Hai(PagalWorld).mp3",
+                img: "Mujhe Pyaar Pyaar Hai.jpg"
+            },
+            {
+                title: "Tu Mera Hogaya Hai",
+                artist: "Pritam, Jubin Nautiyal",
+                src: "Tu-Mera-Hogaya-Hai(PagalWorld).mp3",
+                img: "Tu Mera Hogaya Hai.jpg"
+            },
+            {
+                title: "Hoye Ishq Na",
+                artist: "B Praak",
+                src: "Hoye Ishq Na Tadap 320 Kbps.mp3",
+                img: "hoye-ishq-na-tadap-.jpg"
+            },
+
+        ];
+
+        let currentTrackIndex = 0;
+
+        song.onloadedmetadata = function() {
+            progress.max = song.duration;
+            progress.value = song.currentTime;
+        }
+
+        function playTrack(index) {
+            song.src = tracks[index].src;
+            songTitle.innerText = tracks[index].title;
+            songArtist.innerText = tracks[index].artist;
+            songImg.src = tracks[index].img; // UPDATE THE IMAGE SOURCE
+            song.play();
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+
+        function playPause() {
+            if (ctrlIcon.classList.contains("fa-pause")) {
+                song.pause();
+                ctrlIcon.classList.remove("fa-pause");
+                ctrlIcon.classList.add("fa-play");
+            } else {
+                playTrack(currentTrackIndex);
+            }
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % tracks.length; // LOOP BACK TO START IF END REACHED
+            playTrack(currentTrackIndex);
+        }
+
+        function previousTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length; // LOOP TO LAST TRACK IF START REACHED
+            playTrack(currentTrackIndex);
+        }
+
+        if (song.play()) {
+            setInterval(() => {
+                progress.value = song.currentTime;
+            }, 500);
+        }
+
+        progress.onchange = function() {
+            song.play();
+            song.currentTime = progress.value;
+            ctrlIcon.classList.add("fa-pause");
+            ctrlIcon.classList.remove("fa-play");
+        }
+    </script>
+</body>
+</html>
